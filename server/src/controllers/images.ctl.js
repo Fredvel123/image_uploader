@@ -1,4 +1,6 @@
 const Images = require('../models/images.models');
+const express = require('express');
+const app = express();
 // multer
 const fs = require('fs-extra');
 const path = require('path');
@@ -13,8 +15,15 @@ const storage = multer.diskStorage({
   }
 })
 const upload = multer({
+  dest: path.join(__dirname, '../images'),
   storage
 })
+
+const createImageFile = async () => {
+  await fs.ensureDir(path.join(__dirname, '../images'))
+}
+createImageFile(); // this piece of code cause heroku dosen't works without 'images' directory
+
 exports.uploadMiddleware = upload.single('image');
 // cloudinary
 const cloudinary = require('cloudinary').v2;
